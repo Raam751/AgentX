@@ -1,0 +1,31 @@
+{
+  "name": "ai-browser-agent",
+  "version": "2.0.0",
+  "description": "AI-powered browser automation agent with real-time dashboard, vision-based element annotation, and self-correction — powered by Groq/OpenAI + Playwright",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "groq-sdk": "^0.9.0",
+    "openai": "^4.0.0",
+    "playwright": "^1.52.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "socket.io": "^4.8.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "ai",
+    "browser-automation",
+    "groq",
+    "llama",
+    "playwright",
+    "vision",
+    "agent"
+  ],
+  "license": "MIT"
+}
