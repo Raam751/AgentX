@@ -39,12 +39,16 @@ COPY . .
 # Don't copy .env (use platform env vars instead)
 RUN rm -f .env
 
-# Expose port
-EXPOSE 3000
+# Create writable directories for screenshots/logs (HF Spaces runs as non-root)
+RUN mkdir -p /app/screenshots /app/logs && chmod -R 777 /app/screenshots /app/logs
+
+# Expose port (HF Spaces expects 7860)
+EXPOSE 7860
 
 # Force headless mode in cloud
 ENV HEADLESS=true
-ENV PORT=3000
+ENV PORT=7860
 ENV NODE_ENV=production
+ENV HOME=/app
 
 CMD ["node", "server.js"]

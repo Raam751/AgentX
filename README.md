@@ -1,3 +1,12 @@
+---
+title: AgentX - AI Browser Automation
+emoji: 🤖
+colorFrom: indigo
+colorTo: purple
+sdk: docker
+app_port: 7860
+---
+
 # 🤖 AI Browser Automation Agent
 
 An AI-powered browser automation agent that **genuinely sees** web pages through annotated screenshots, makes autonomous decisions, and self-corrects when things go wrong. Watch it work in real-time through a sleek web dashboard.
