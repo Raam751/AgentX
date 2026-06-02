@@ -26,11 +26,14 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
+# Pin Playwright browser install path so it's the same at build & runtime
+ENV PLAYWRIGHT_BROWSERS_PATH=/app/pw-browsers
+
 # Install npm dependencies
 COPY package*.json ./
 RUN npm ci --omit=dev
 
-# Install Playwright Chromium
+# Install Playwright Chromium to the pinned path
 RUN npx playwright install chromium
 
 # Copy app source
@@ -39,13 +42,14 @@ COPY . .
 # Don't copy .env (use platform env vars instead)
 RUN rm -f .env
 
-# Create writable directories for screenshots/logs (HF Spaces runs as non-root)
-RUN mkdir -p /app/screenshots /app/logs && chmod -R 777 /app/screenshots /app/logs
+# Create writable directories (HF Spaces runs as non-root)
+RUN mkdir -p /app/screenshots /app/logs && \
+    chmod -R 777 /app/screenshots /app/logs /app/pw-browsers
 
 # Expose port (HF Spaces expects 7860)
 EXPOSE 7860
 
-# Force headless mode in cloud
+# Runtime env
 ENV HEADLESS=true
 ENV PORT=7860
 ENV NODE_ENV=production
