@@ -58,6 +58,11 @@ class Agent {
    * Returns a hint string if stuck, or null if not.
    */
   _detectLoop(actionObj) {
+    // Scroll and navigate are exempt — scrolling down multiple times is normal
+    if (['scroll', 'navigate', 'wait', 'type'].includes(actionObj.action)) {
+      return null;
+    }
+
     const key = `${actionObj.action}:${actionObj.elementId}:${JSON.stringify(actionObj.params)}`;
     this.actionHistory.push(key);
 
@@ -318,6 +323,8 @@ class Agent {
           return await this.browser.clearAndType(params.text);
         case 'scroll':
           return await this.browser.scroll(params.direction, params.amount);
+        case 'press_key':
+          return await this.browser.pressKey(params.key);
         case 'select_option':
           return await this.browser.selectOption(elementId, elements, params.value);
         case 'wait':

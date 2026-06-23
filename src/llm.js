@@ -25,6 +25,9 @@ Available actions:
 - scroll: Scroll the page. { "action": "scroll", "elementId": null, "params": { "direction": "down", "amount": 400 }, "reasoning": "..." }
 - navigate: Go to a URL. { "action": "navigate", "elementId": null, "params": { "url": "https://..." }, "reasoning": "..." }
 - select_option: Select an option from a dropdown. { "action": "select_option", "elementId": 5, "params": { "value": "option text" }, "reasoning": "..." }
+- press_key: Press a keyboard key. { "action": "press_key", "elementId": null, "params": { "key": "Enter" }, "reasoning": "..." }
+  Supported keys: Enter, Escape, Tab, Space, Backspace, ArrowDown, ArrowUp, ArrowLeft, ArrowRight
+  Use Enter to submit search forms instead of clicking the search button.
 - wait: Wait before next action. { "action": "wait", "elementId": null, "params": { "ms": 1000 }, "reasoning": "..." }
 - pause_for_user: Pause and ask the user to do something manually (file uploads, captchas, 2FA, etc).
   { "action": "pause_for_user", "elementId": null, "params": { "message": "Please upload your resume file, then click Resume" }, "reasoning": "..." }
@@ -41,7 +44,9 @@ RULES:
 7. If an element you need is not in the elements list, scroll to reveal more of the page
 8. NEVER re-fill a field that already has the correct value. Check [value: "..."] in the elements list — if a field already contains the right text, SKIP it and move to the next empty field
 9. For file upload fields (type="file") or file attachment buttons: use "pause_for_user" to let the human handle it. Do NOT click file upload buttons repeatedly — you cannot interact with the OS file picker dialog
-10. After pausing for the user, when you resume, check the current state of the form and continue from where you left off — do NOT restart from the beginning`;
+10. After pausing for the user, when you resume, check the current state of the form and continue from where you left off — do NOT restart from the beginning
+11. After typing in a search box, prefer using "press_key" with "Enter" to submit, rather than clicking a search button
+12. If a video or link you want to click is near the bottom of the screen, scroll down first to bring it into full view, then click it`;
 
 // Default models per provider
 const DEFAULT_MODELS = {

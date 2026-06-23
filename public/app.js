@@ -218,6 +218,7 @@
     loop_detected:  { icon: '🔄', cls: 'error',    label: 'Loop Detected' },
     pause_for_user: { icon: '⏸',  cls: 'scroll',   label: 'Paused' },
     select_option:  { icon: '📋', cls: 'click',    label: 'Select' },
+    press_key:      { icon: '⌨️',  cls: 'type',     label: 'Key Press' },
   };
 
   function addLogEntry(data) {
@@ -242,6 +243,8 @@
       desc = `✓ Verified text entered correctly`;
     } else if (data.action === 'verify_failed') {
       desc = `✗ Text verification failed — retrying`;
+    } else if (data.action === 'press_key') {
+      desc = `Press key: ${data.params?.key || '?'}`;
     } else if (data.action === 'pause_for_user') {
       desc = `⏸ ${data.params?.message || 'Waiting for user action'}`;
     } else if (data.action === 'select_option') {

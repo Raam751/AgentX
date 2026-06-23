@@ -70,17 +70,28 @@ class Browser {
       return `Error: Element [${elementId}] not found`;
     }
 
-    // If element is in an iframe, click via the frame
-    if (element.frameIndex > 0) {
-      const frames = this.page.frames();
-      const frame = frames[element.frameIndex];
-      if (frame) {
-        // Click at the element's center coordinates (absolute on the page)
-        await this.page.mouse.click(element.center.x, element.center.y);
-      } else {
-        return `Error: Frame ${element.frameIndex} not found`;
-      }
+    const viewportHeight = 800;
+    const viewportWidth = 1280;
+
+    // Auto-scroll if element is near the edge or outside viewport
+    if (element.center.y > viewportHeight - 50 || element.center.y < 50) {
+      const scrollAmount = element.center.y - (viewportHeight / 2);
+      await this.page.mouse.wheel(0, scrollAmount);
+      await this.page.waitForTimeout(400);
+      logger.info(`Auto-scrolled ${scrollAmount}px to bring element [${elementId}] into view`);
+
+      // Re-read the element's position after scrolling (it moved)
+      // We can't re-extract all elements, so click by scrolling to center and using updated position
+      // The element should now be near the center of viewport
+      const newY = element.center.y - scrollAmount;
+      await this.page.mouse.click(element.center.x, Math.max(50, Math.min(newY, viewportHeight - 50)));
     } else {
+      // Element is comfortably in viewport — click directly
+      if (element.frameIndex > 0) {
+        const frames = this.page.frames();
+        const frame = frames[element.frameIndex];
+        if (!frame) return `Error: Frame ${element.frameIndex} not found`;
+      }
       await this.page.mouse.click(element.center.x, element.center.y);
     }
 
