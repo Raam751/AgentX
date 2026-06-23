@@ -80,7 +80,7 @@ async function annotate(page, elements) {
     return box + pill;
   }).join('');
 
-  // Inject overlay container
+  // Inject overlay container (Trusted Types-safe for sites like YouTube)
   await page.evaluate(({ id, html }) => {
     // Remove existing overlay if any
     const existing = document.getElementById(id);
@@ -89,7 +89,24 @@ async function annotate(page, elements) {
     const container = document.createElement('div');
     container.id = id;
     container.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2147483645;';
-    container.innerHTML = html;
+
+    // YouTube/Google enforce Trusted Types — create a policy to allow innerHTML
+    try {
+      if (window.trustedTypes && window.trustedTypes.createPolicy) {
+        const policy = window.trustedTypes.createPolicy('aiAgentOverlay', {
+          createHTML: (input) => input,
+        });
+        container.innerHTML = policy.createHTML(html);
+      } else {
+        container.innerHTML = html;
+      }
+    } catch (e) {
+      // Policy name might already exist, fall back to DOM parsing
+      const tmp = document.createElement('template');
+      tmp.innerHTML = html;
+      container.appendChild(tmp.content);
+    }
+
     document.body.appendChild(container);
   }, { id: overlayId, html: overlayDivs });
 
